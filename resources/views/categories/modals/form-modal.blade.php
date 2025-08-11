@@ -1,7 +1,7 @@
-<div id="categoryFormModal" class="fixed inset-0 bg-black/50 hidden z-50">
+<div id="categoryModal" class="fixed inset-0 bg-black/50 hidden z-50">
     <!-- Added inner wrapper for centering -->
     <div class="flex items-center justify-center h-full">
-        <div class="bg-white rounded-lg w-full max-w-md mx-4">
+        <div class="bg-white rounded-lg w-full max-w-lg mx-4">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 id="modalTitle" class="text-lg font-semibold">Add Category</h3>
@@ -42,7 +42,7 @@
 
 <script>
 function openFormModal(category = null) {
-    const modal = document.getElementById('categoryFormModal');
+    const modal = document.getElementById('categoryModal');
     const form = document.getElementById('categoryForm');
     const title = document.getElementById('modalTitle');
 
@@ -63,7 +63,7 @@ function openFormModal(category = null) {
 }
 
 function closeFormModal() {
-    document.getElementById('categoryFormModal').classList.add('hidden');
+    document.getElementById('categoryModal').classList.add('hidden');
     document.getElementById('categoryForm').reset();
     document.getElementById('nameError').classList.add('hidden');
 }
@@ -106,7 +106,7 @@ async function submitCategoryForm(event) {
 }
 
 // Close modals when clicking outside
-document.getElementById('categoryFormModal').addEventListener('click', function(e) {
+document.getElementById('categoryModal').addEventListener('click', function(e) {
     if (e.target === this) closeFormModal();
 });
 

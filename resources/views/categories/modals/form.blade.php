@@ -6,7 +6,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <h3 id="modalTitle" class="text-lg font-semibold">Add Category</h3>
                     <button onclick="Category.closeModal()" class="text-gray-400 hover:text-gray-600">✕</button>
-                </div>
+                </div>>
 
                 <form id="categoryForm" onsubmit="Category.handleSubmit(event)" enctype="multipart/form-data">
                     @csrf
@@ -42,7 +42,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button type="button"
-                                onclick="Category.closeModal()"
+                                onclick="closeModal('categoryModal')"
                                 class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                             Cancel
                         </button>
