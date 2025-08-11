@@ -861,7 +861,7 @@
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick="openCategoryModal(${JSON.stringify(category)})" class="p-2 hover:bg-gray-100 rounded-lg">✏️</button>
-                                        <button onclick=\"showDeleteModal(${category.id}, \'${category.name}\')\" class=\"p-2 hover:bg-gray-100 rounded-lg\">🗑️</button>\n\n
+                                        <button onclick="showDeleteModal(${category.id}, '${category.name}')" class="p-2 hover:bg-gray-100 rounded-lg">🗑️</button>
                                     </div>
                                 </div>
                                 <div class="bg-gray-50 rounded-lg p-3">
