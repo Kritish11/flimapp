@@ -457,7 +457,7 @@
                 <div id="categories" class="tab-content active">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold">Categories</h2>
-                        <button onclick="showCategoryModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
+                        <button onclick="showCategoryModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">\n
                             <span>➕</span> Add Category
                         </button>
                     </div>
@@ -714,57 +714,6 @@
                         });
                     }
 
-                    function showSuccessAlert(message) {
-                        const alert = document.getElementById('successAlert');
-                        document.getElementById('successMessage').textContent = message;
-                        alert.classList.remove('hidden');
-                        alert.classList.add('active');
-                        setTimeout(() => {
-                            alert.classList.remove('active');
-                            setTimeout(() => alert.classList.add('hidden'), 300);
-                        }, 3000);
-                    }
-
-                    function confirmDelete(id, name) {
-                        const modal = document.getElementById('deleteModal');
-                        const message = document.getElementById('deleteMessage');
-                        const confirmBtn = document.getElementById('confirmDeleteBtn');
-
-                        message.textContent = `Are you sure you want to delete "${name}"?`;
-                        modal.classList.remove('hidden');
-                        confirmBtn.onclick = () => deleteCategory(id);
-                    }
-
-                    function hideDeleteModal() {
-                        const modal = document.getElementById('deleteModal');
-                        modal.classList.add('hidden');
-                    }
-
-                    async function deleteCategory(id) {
-                        try {
-                            const response = await fetch(`{{ url('/categories') }}/${id}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                                }
-                            });
-
-                            const data = await response.json();
-
-                            if (data.success) {
-                                const element = document.getElementById(`category-${id}`);
-                                element.remove();
-                                hideDeleteModal();
-                                showSuccessAlert('Category deleted successfully');
-                            } else {
-                                throw new Error(data.message);
-                            }
-                        } catch (error) {
-                            alert('Failed to delete category: ' + error.message);
-                        }
-                    }
-
                     function showCategoryModal(category = null) {
                         const modal = document.getElementById('categoryModal');
                         const form = document.getElementById('categoryForm');
@@ -801,7 +750,7 @@
                     function hideCategoryModal() {
                         const modal = document.getElementById('categoryModal');
                         const content = modal.querySelector('.modal-content');
-                        content.classList.remove('active');
+                        content.classList.remove('active');\n
                         modal.classList.remove('active');
                         setTimeout(() => modal.classList.add('hidden'), 300);
                     }\n
@@ -830,16 +779,15 @@
                             const data = await response.json();
 
                             if (data.success) {
-                                hideCategoryModal();
+                                hideCategoryModal();\n
                                 showSuccessAlert(data.message);
                                 if (isUpdate) {
-                                    updateCategoryInUI(data.category);
+                                    updateCategoryInUI(data.category);\n
                                 } else {
                                     addCategoryToUI(data.category);
                                 }
                             }
                         } catch (error) {
-                            document.getElementById('categoryError').textContent = error.message;
                             document.getElementById('categoryError').classList.remove('hidden');
                         }
                     }
@@ -850,7 +798,7 @@
                         const confirmBtn = document.getElementById('confirmDeleteBtn');
 
                         message.textContent = `Are you sure you want to delete "${name}"?`;
-                        confirmBtn.onclick = () => deleteCategory(id);
+                        confirmBtn.onclick = () => deleteCategory(id);\n
 
                         modal.classList.remove('hidden');
                         setTimeout(() => {
@@ -862,10 +810,35 @@
                     function hideDeleteModal() {
                         const modal = document.getElementById('deleteModal');
                         const content = modal.querySelector('.modal-content');
-                        content.classList.remove('active');
+                        content.classList.remove('active');\n
                         modal.classList.remove('active');
                         setTimeout(() => modal.classList.add('hidden'), 300);
                     }
+
+                    async function deleteCategory(id) {\n
+                        try {\n
+                            const response = await fetch(`{{ url('/categories') }}/${id}`, {\n
+                                method: 'DELETE',\n
+                                headers: {\n
+                                    'Accept': 'application/json',\n
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content\n
+                                }\n
+                            });\n
+
+                            const data = await response.json();\n
+
+                            if (data.success) {\n
+                                const element = document.getElementById(`category-${id}`);\n
+                                element.remove();\n
+                                hideDeleteModal();\n
+                                showSuccessAlert('Category deleted successfully');\n
+                            } else {\n
+                                throw new Error(data.message);\n
+                            }\n
+                        } catch (error) {\n
+                            alert('Failed to delete category: ' + error.message);\n
+                        }\n
+                    }\n
 
                     // Update category grid item functions
                     function updateCategoryInUI(category) {
@@ -888,7 +861,7 @@
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick="openCategoryModal(${JSON.stringify(category)})" class="p-2 hover:bg-gray-100 rounded-lg">✏️</button>
-                                        <button onclick=\"showDeleteModal(${category.id}, \'${category.name}\')\" class=\"p-2 hover:bg-gray-100 rounded-lg\">🗑️</button>\n
+                                        <button onclick=\"showDeleteModal(${category.id}, \'${category.name}\')\" class=\"p-2 hover:bg-gray-100 rounded-lg\">🗑️</button>\n\n
                                     </div>
                                 </div>
                                 <div class="bg-gray-50 rounded-lg p-3">
@@ -906,7 +879,7 @@
                         const alert = document.getElementById('successAlert');
                         document.getElementById('successMessage').textContent = message;
                         alert.classList.remove('hidden');
-                        setTimeout(() => alert.classList.add('hidden'), 3000);
+                        setTimeout(() => alert.classList.add('hidden'), 3000);\n
                     }
 
                     // Close modals when clicking outside
