@@ -457,7 +457,7 @@
                 <div id="categories" class="tab-content active">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold">Categories</h2>
-                        <button onclick="Category.openModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
+                        <button onclick="showCategoryModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
                             <span>➕</span> Add Category
                         </button>
                     </div>
@@ -475,8 +475,8 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="Category.edit({{ json_encode($category) }})" class="p-2 hover:bg-gray-100 rounded-lg">✏️</button>
-                                    <button onclick="Category.confirmDelete({{ $category->id }}, '{{ $category->name }}')" class="p-2 hover:bg-gray-100 rounded-lg">🗑️</button>
+                                    <button onclick="showCategoryModal({{ json_encode($category) }})" class="p-2 hover:bg-gray-100 rounded-lg">✏️</button>
+                                    <button onclick="showDeleteModal({{ $category->id }}, '{{ $category->name }}')" class="p-2 hover:bg-gray-100 rounded-lg">🗑️</button>
                                 </div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3">
@@ -497,7 +497,7 @@
                                 <div class="p-6">
                                     <div class="flex justify-between items-center mb-4">
                                         <h3 id="modalTitle" class="text-lg font-semibold">Add Category</h3>
-                                        <button onclick="Category.closeModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+                                        <button onclick="hideCategoryModal()" class="text-gray-400 hover:text-gray-600">✕</button>
                                     </div>
 
                                     <form id="categoryForm" onsubmit="Category.handleSubmit(event)">
@@ -511,7 +511,7 @@
                                             <p id="categoryError" class="mt-2 text-sm text-red-600 hidden"></p>
                                         </div>
                                         <div class="flex justify-end gap-3">
-                                            <button type="button" onclick="Category.closeModal()"
+                                            <button type="button" onclick="hideCategoryModal()"
                                                 class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                                                 Cancel
                                             </button>
@@ -538,7 +538,7 @@
                                     <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Category</h3>
                                     <p id="deleteMessage" class="text-sm text-gray-500 mb-6"></p>
                                     <div class="flex justify-center gap-3">
-                                        <button onclick="Category.closeDeleteModal()"
+                                        <button onclick="hideDeleteModal()"
                                             class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                                             Cancel
                                         </button>
@@ -714,88 +714,6 @@
                         });
                     }
 
-                    // Add Category Modal Functions
-                    function showAddCategoryModal() {
-                        const modal = document.getElementById('categoryModal');
-                        const sheet = modal.querySelector('.bottom-sheet');
-                        modal.classList.add('active');
-                        setTimeout(() => sheet.classList.add('active'), 50);
-                        document.getElementById('categoryName').focus();
-                    }
-
-                    function hideAddCategoryModal() {
-                        const modal = document.getElementById('categoryModal');
-                        const sheet = modal.querySelector('.bottom-sheet');
-                        sheet.classList.remove('active');
-                        setTimeout(() => {
-                            modal.classList.remove('active');
-                            document.getElementById('categoryForm').reset();
-                            document.getElementById('categoryError').classList.add('hidden');
-                        }, 300);
-                    }
-
-                    async function handleAddCategory(event) {
-                        event.preventDefault();
-                        const form = event.target;
-                        const submitButton = form.querySelector('button[type="submit"]');
-                        const errorElement = document.getElementById('categoryError');
-
-                        try {
-                            submitButton.disabled = true;
-                            const formData = new FormData(form);
-
-                            const response = await fetch('{{ route("categories.store") }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                                },
-                                body: formData
-                            });
-
-                            const data = await response.json();
-
-                            if (data.success) {
-                                // Add new category to grid
-                                const categoriesGrid = document.getElementById('categoriesGrid');
-                                const newCategory = `
-                                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow" id="category-${data.category.id}">
-                                        <div class="flex justify-between items-start mb-4">
-                                            <div class="flex items-center gap-3">
-                                                <span class="text-3xl">📁</span>
-                                                <div>
-                                                    <h3 class="font-semibold text-lg">${data.category.name}</h3>
-                                                    <p class="text-sm text-gray-500">0 videos</p>
-                                                </div>
-                                            </div>
-                                            <div class="flex gap-2">
-                                                <button class="p-2 hover:bg-gray-100 rounded-lg">✏️</button>
-                                                <button class="p-2 hover:bg-gray-100 rounded-lg" onclick="confirmDelete(${data.category.id}, '${data.category.name}')">🗑️</button>
-                                            </div>
-                                        </div>
-                                        <div class="bg-gray-50 rounded-lg p-3">
-                                            <div class="text-sm text-gray-600">
-                                                <p>Last updated: Just now</p>
-                                                <p>Created: Just now</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                                categoriesGrid.insertAdjacentHTML('afterbegin', newCategory);
-                                hideAddCategoryModal();
-                                showSuccessAlert('Category added successfully!');
-                            } else {
-                                errorElement.textContent = data.message || 'Failed to add category';
-                                errorElement.classList.remove('hidden');
-                            }
-                        } catch (error) {
-                            errorElement.textContent = 'An error occurred. Please try again.';
-                            errorElement.classList.remove('hidden');
-                        } finally {
-                            submitButton.disabled = false;
-                        }
-                    }
-
                     function showSuccessAlert(message) {
                         const alert = document.getElementById('successAlert');
                         document.getElementById('successMessage').textContent = message;
@@ -847,13 +765,6 @@
                         }
                     }
 
-                    // Close modal when clicking outside
-                    document.getElementById('categoryModal').addEventListener('click', (e) => {
-                        if (e.target.id === 'categoryModal') {
-                            hideAddCategoryModal();
-                        }
-                    });
-
                     function showCategoryModal(category = null) {
                         const modal = document.getElementById('categoryModal');
                         const form = document.getElementById('categoryForm');
@@ -893,7 +804,7 @@
                         content.classList.remove('active');
                         modal.classList.remove('active');
                         setTimeout(() => modal.classList.add('hidden'), 300);
-                    }
+                    }\n
 
                     async function handleCategorySubmit(event) {
                         event.preventDefault();
@@ -977,7 +888,7 @@
                                     </div>
                                     <div class="flex gap-2">
                                         <button onclick="openCategoryModal(${JSON.stringify(category)})" class="p-2 hover:bg-gray-100 rounded-lg">✏️</button>
-                                        <button onclick="openDeleteModal(${category.id}, '${category.name}')" class="p-2 hover:bg-gray-100 rounded-lg">🗑️</button>
+                                        <button onclick=\"showDeleteModal(${category.id}, \'${category.name}\')\" class=\"p-2 hover:bg-gray-100 rounded-lg\">🗑️</button>\n
                                     </div>
                                 </div>
                                 <div class="bg-gray-50 rounded-lg p-3">
